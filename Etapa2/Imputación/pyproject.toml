@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mima-sima"
+version = "1.0.0"
+description = "Modelo educativo de imputación multivariada para datos horarios de SIMA"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = { text = "MIT modificada; consulte docs/licencias/Licencia_Codigo.md" }
+authors = [
+  { name = "Equipo 6 - Tecnológico de Monterrey" },
+]
+dependencies = [
+  "matplotlib>=3.8,<4",
+  "numpy>=1.26,<3",
+  "pandas>=2.2,<3",
+  "torch>=2.3,<3",
+]
+
+[project.scripts]
+sima = "sima:main"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3,<9",
+  "ruff>=0.9",
+]
+
+[tool.setuptools]
+py-modules = ["sima"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["notebooks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+

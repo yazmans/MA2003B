@@ -1,0 +1,25 @@
+{
+  "protocol": {
+    "split": "chronological_holdout",
+    "artificial_mask_ratio": 0.2,
+    "n_ensemble_samples": 20,
+    "n_evaluated_values": 20482,
+    "max_batches": 20
+  },
+  "aggregate_metrics_physical_scale": {
+    "mae": 12.442471631745722,
+    "rmse": 29.560152465271486,
+    "mre_percent": 58.22585821889514,
+    "r2": 0.9762572340144811
+  },
+  "probabilistic_metrics_physical_scale": {
+    "quantile_loss_95": 7.360048770904541,
+    "crps": 12.297558230751756
+  },
+  "domain_metrics": {
+    "pm25_gt_pm10_percent": 0.0,
+    "nox_o3_pearson": -0.41176439495921907,
+    "mean_feature_pearson": 0.24086443625421827,
+    "skill_score_vs_24h_persistence": 0.20715944298176747
+  }
+}
