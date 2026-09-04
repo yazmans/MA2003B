@@ -1,0 +1,96 @@
+---
+title: '1111'
+author: "Gabriela García Velásquez"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+```{r}
+library(MODISTools)
+library(dplyr)
+
+estaciones <- data.frame(
+  site_name = c("NE2", "NE3"),
+  lat = c(25.77722, 25.79056),
+  lon = c(-100.18806, -100.07833)
+)
+
+evi_raw <- mt_batch_subset(
+  df = estaciones,
+  product = "MOD13Q1",
+  band = "250m_16_days_EVI",
+  start = "2021-01-01",
+  end = "2025-12-31",
+  km_lr = 0,
+  km_ab = 0
+)
+```
+
+```{r}
+names(evi_raw)
+```
+```{r}
+unique(evi_raw$site)
+```
+
+```{r}
+summary(evi_raw$value)
+```
+
+```{r}
+table(evi_raw$site)
+```
+
+```{r}
+head(evi_raw$calendar_date)
+```
+
+```{r}
+df_evi <- evi_raw %>%
+  mutate(EVI = value * 0.0001) %>%
+  select(
+    estacion = site,
+    fecha = calendar_date,
+    EVI
+  )
+
+head(df_evi)$
+```
+
+
+
+```{r}
+write.csv(df_evi, "EVI_estaciones.csv", row.names = FALSE)
+
+```
+
+
+```{r}
+evi_ne2 <- df_evi %>%
+  filter(estacion == "NE2")
+
+evi_ne3 <- df_evi %>%
+  filter(estacion == "NE3")
+```
+
+```{r}
+nrow(evi_ne2)
+nrow(evi_ne3)
+```
+
+```{r}
+write.csv(evi_ne2, "EVI_NE2.csv", row.names = FALSE)
+
+write.csv(evi_ne3, "EVI_NE3.csv", row.names = FALSE)
+```
+
+
+
+
