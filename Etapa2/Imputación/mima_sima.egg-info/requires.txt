@@ -1,0 +1,4 @@
+matplotlib<4,>=3.8
+numpy<3,>=1.26
+pandas<3,>=2.2
+torch<3,>=2.3
