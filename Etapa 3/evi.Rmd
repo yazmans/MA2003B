@@ -17,9 +17,9 @@ library(MODISTools)
 library(dplyr)
 
 estaciones <- data.frame(
-  site_name = c("NE2", "NE3"),
-  lat = c(25.77722, 25.79056),
-  lon = c(-100.18806, -100.07833)
+  site_name = c("NO3", "SO2"),
+  lat = c(25.768333, 	25.665000),
+  lon = c(-100.463611, -100.412778)
 )
 
 evi_raw <- mt_batch_subset(
@@ -73,22 +73,22 @@ write.csv(df_evi, "EVI_estaciones.csv", row.names = FALSE)
 
 
 ```{r}
-evi_ne2 <- df_evi %>%
-  filter(estacion == "NE2")
+evi_no3 <- df_evi %>%
+  filter(estacion == "NO3")
 
-evi_ne3 <- df_evi %>%
-  filter(estacion == "NE3")
+evi_so2 <- df_evi %>%
+  filter(estacion == "SO2")
 ```
 
 ```{r}
-nrow(evi_ne2)
-nrow(evi_ne3)
+nrow(evi_no3)
+nrow(evi_so2)
 ```
 
 ```{r}
-write.csv(evi_ne2, "EVI_NE2.csv", row.names = FALSE)
+write.csv(evi_no3, "EVI_NO3.csv", row.names = FALSE)
 
-write.csv(evi_ne3, "EVI_NE3.csv", row.names = FALSE)
+write.csv(evi_so2, "EVI_SO2.csv", row.names = FALSE)
 ```
 
 
