@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# Regresión Regularizada (Ridge / Lasso) para PM10
+# Regresión Regularizada Ridge/Lasso para PM10
 
 ```{r}
 
@@ -20,10 +20,7 @@ library(glmnet)
 library(dplyr)
 library(ggplot2)
 
-archivos = c(
-  "NE2_semanal_mediana_con_ndvi_sin_nulos.csv",
-  "NE3_semanal_mediana_con_ndvi_sin_nulos.csv"
-)
+archivos = c("NE2_semanal_mediana_con_ndvi_sin_nulos.csv","NE3_semanal_mediana_con_ndvi_sin_nulos.csv")
 
 
 lista_df = lapply(archivos, read.csv)
@@ -37,7 +34,7 @@ colSums(is.na(df))
 
 
 # Y = PM10 
-# X = meteorología + NDVI + estación (dummy)
+# X = vars meteorológicaas + NDVI + estación (dummy)
 variables_modelo = c("PM10", "WSR", "WDR_E", "WDR_N", "WDR_NE", "WDR_NO",
                        "WDR_O", "WDR_S", "WDR_SE", "TOUT", "RH", "SR",
                       "PRS", "RAINF", "ndvi_mediana", "estacion")
@@ -49,9 +46,6 @@ df_modelo = na.omit(df_modelo)
 
 ```{r}
 
-# Preparar variable dummy de estación y matriz de diseño
-# model.matrix crea automáticamente las dummies para 'estacion'
-# El -1 en la fórmula evita que se agregue un intercepto duplicado en X
 X = model.matrix(PM10 ~ . - 1, data = df_modelo)
 y = df_modelo$PM10
 
@@ -60,7 +54,6 @@ y = df_modelo$PM10
 ```{r}
 
 # estandarización de variables
-# glmnet estandariza internamente por defecto (standardize = TRUE),
 #división train y test
 set.seed(123)  # para reproducibilidad
 n = nrow(X)
@@ -80,7 +73,7 @@ y_test  = y[-indices_train]
 cv_lasso = cv.glmnet(X_train, y_train, alpha = 1, standardize = TRUE)
 par(mar = c(5, 4, 6, 2) + 0.1) 
 plot(cv_lasso)
-title(main = "Selección de λ por Validación Cruzada — Modelo Lasso (PM10)", line = 3)  # muestra el error según lambda
+title(main = "Selección de λ por Validación Cruzada — Modelo Lasso (PM10)", line = 3)  
 lambda_lasso_optimo = cv_lasso$lambda.min
 
 # RIDGE
@@ -102,9 +95,6 @@ modelo_ridge = glmnet(X_train, y_train, alpha = 0, lambda = lambda_ridge_optimo,
 
 ## coeficientes
 ```{r}
-
-# En Lasso, los coeficientes muy pequeños se eliminan
-#  esto es la selección de variables automática
 print("Coeficientes LASSO:")
 print(coef(modelo_lasso))
 
@@ -114,7 +104,7 @@ print(coef(modelo_ridge))
 ```
 
 
-## evaluación de desempeño
+## evaluación de desempeño: r ajustado, r2
 ```{r}
 
 pred_lasso = predict(modelo_lasso, newx = X_test)
@@ -123,8 +113,8 @@ pred_ridge = predict(modelo_ridge, newx = X_test)
 rmse = function(real, pred) sqrt(mean((real - pred)^2))
 r2   = function(real, pred) 1 - sum((real - pred)^2) / sum((real - mean(real))^2)
 
-cat("LASSO -> RMSE:", rmse(y_test, pred_lasso), " | R2:", r2(y_test, pred_lasso), "\n")
-cat("RIDGE -> RMSE:", rmse(y_test, pred_ridge), " | R2:", r2(y_test, pred_ridge), "\n")
+cat("LASSO: RMSE:", rmse(y_test, pred_lasso), " | R2:", r2(y_test, pred_lasso), "\n")
+cat("RIDGE: RMSE:", rmse(y_test, pred_ridge), " | R2:", r2(y_test, pred_ridge), "\n")
 
 ```
 
